@@ -1,0 +1,10 @@
+Style/FileName:
+  Exclude:
+    - 'Vagrantfile-kitchen.rb'
+
+Metrics/LineLength:
+  Enabled: false
+
+Style/SymbolArray:
+  Exclude:
+    - 'recipes/docker_service.rb'

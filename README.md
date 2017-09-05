@@ -1,4 +1,5 @@
 # docker-cookbook
 
-TODO: Enter the cookbook description here.
+## Work In Progress
 
+### Docker server, with LVM backend storage
