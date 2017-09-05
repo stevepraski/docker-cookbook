@@ -16,13 +16,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-docker_service 'default' do
-  storage_driver 'devicemapper'
-  storage_opts [ # ideally, should be read from /etc/sysconfig/docker-storage directly,...
-    'dm.fs=xfs',
-    'dm.thinpooldev=/dev/mapper/docker--vg-docker--pool',
-    'dm.use_deferred_deletion=true',
-    'dm.use_deferred_removal=true'
-  ]
-  action [:create, :start]
+# ugly conditional recipe inclusion, but it works
+if node['docker-server']['storage-driver'] == 'zfs'
+  include_recipe 'docker-cookbook::zfs_storage'
+  docker_service 'default' do
+    storage_driver 'zfs'
+    action [:create, :start]
+  end
+else
+  include_recipe 'docker-cookbook::lvm_storage'
+  docker_service 'default' do
+    storage_driver 'devicemapper'
+    storage_opts [ # ideally, should be read from /etc/sysconfig/docker-storage directly,...
+      'dm.fs=xfs',
+      'dm.thinpooldev=/dev/mapper/docker--vg-docker--pool',
+      'dm.use_deferred_deletion=true',
+      'dm.use_deferred_removal=true'
+    ]
+    action [:create, :start]
+  end
 end
